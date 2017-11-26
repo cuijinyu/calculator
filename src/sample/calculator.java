@@ -11,7 +11,9 @@ public class calculator {
     }
     public static void  main(String args[]){
         System.out.println(new calculator().cal("9+(3-1)*3+10/2"));
+//        new calculator().cal("9+(3-1)*3+10/2");
     }
+
     //将中缀表达式转换为后缀表达式
     private  String transferToPostfix(String expression){
         String postfixExpression="";
@@ -147,9 +149,11 @@ public class calculator {
         double temp=0;
         double result=0;
         for (int i=0;i<postfixExpressions.length;i++){
-            if (postfixExpressions[i]>='0'&&postfixExpressions[i]<='9'){
+            if (postfixExpressions[i]>'0'&&postfixExpressions[i]<='9'){
                 numberArray.push((double)(postfixExpressions[i]-'0'));
-            }else{
+            }else if(postfixExpressions[i] == '0'){
+                numberArray.push(numberArray.pop()*10);
+            } else{
                 right=numberArray.pop();
                 left=numberArray.pop();
                 if(postfixExpressions[i] == '+'){
@@ -163,6 +167,7 @@ public class calculator {
                 }else if(postfixExpressions[i] == '%'){
                     temp = left % right;
                 }
+//                System.out.println(temp);
                 numberArray.push(temp);
             }
         }
