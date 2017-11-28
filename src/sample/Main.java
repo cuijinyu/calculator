@@ -9,44 +9,61 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 public class Main extends Application{
+    GridPane root = new GridPane();
+    String str="";
+    calculator cal = new calculator();
     @Override
     public void start(Stage primaryStage) {
-        Button btn1 = new Button();
-        Button btn2 = new Button();
-        Button btn3 = new Button();
-        btn1.setText("1");
-        btn2.setText("2");
-        btn3.setText("3");
-        Label numberLabel=new Label("0");
-        GridPane root = new GridPane();
-        root.setHgap(10);
-        root.setVgap(10);
-        root.add(numberLabel,3,0);
-        root.add(btn1,1,2);
-        root.add(btn2,2,2);
-        root.add(btn3,3,2);
-
-
-        btn1.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                numberLabel.setText("1");
+        Label number = new Label();
+        number.setText("0");
+        Button [] numberButtons = new Button[10];
+        Button [] operationButtons = new Button[8];
+        Character [] operations = {'+','-','*','/','c','=','(',')'};
+        for (int i=0;i<operationButtons.length;i++){
+            operationButtons[i] = new Button();
+            int temp=i;
+            operationButtons[i].setText(String.valueOf(operations[i]));
+            if(i!=4&&i!=5){
+            operationButtons[i].setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    str+=operationButtons[temp].getText();
+                    number.setText(str);
+                }
+            });}else if(i==4){
+                operationButtons[i].setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        str="";
+                        number.setText(str);
+                    }
+                });
+            }else{
+                operationButtons[i].setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        number.setText(String.valueOf(cal.cal(str)));
+                        str="";
+                    }
+                });
             }
-        });
-        btn2.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                numberLabel.setText("2");
-            }
-        });
-        btn3.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                numberLabel.setText("3");
-            }
-        });
+            root.add(operationButtons[i],3+i%3,i/3);
+        }
+        for (int i=0;i<numberButtons.length;i++){
+            numberButtons[i]=new Button();
+            int temp=i;
+            numberButtons[i].setText(String.valueOf(temp));
+            numberButtons[i].setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    str+=numberButtons[temp].getText();
+                    number.setText(str);
+                }
+            });
+            root.add(numberButtons[i],i%3,i/3);
+        }
+        root.add(number,5,5);
         Scene scene = new Scene(root, 300, 250);
-
         primaryStage.setTitle("Calculator");
         primaryStage.setScene(scene);
         primaryStage.show();
